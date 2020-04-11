@@ -2,7 +2,9 @@
 Powershell Script To Repack PS2 ZIP archives into GZIP for better storage / native PCSX2 support.
 
 REQUIREMENTS:
+
 Powershell 7 : https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-windows?view=powershell-7
+
 7zip4Powershell - after you install Powershell 7 you can run this command: Install-Module -Name 7Zip4Powershell -RequiredVersion 1.9.0 
 
 You can either download the file from the repository, or simply copy and paste it into any text editor and save it as a .ps1 file. 
