@@ -6,20 +6,35 @@
 # 7zip4Powershell - after you install powershell 7 you can run this command: Install-Module -Name 7Zip4Powershell -RequiredVersion 1.9.0 
 
 
-$procPath = "E:\PS2Processing"; #folder on a drive that has space for you to process the files. SSDs are usually faster if you have one. Should be the folder this script is in!
-$destPath = "E:\Launchbox\Games\Sony Playstation 2"; #final destination - Launchbox's rom folder most likely
-$wtpPath = "E:\PS2WTP" #waiting to process folder - where you usually download your roms
-$targ = 30; #number of files you'd like to process at a time, set this to -1 if you're OK copying every file over at once. - NOT ENCOURAGED TO DO THIS
-$uz = 0;
-$rp = 0;
-$loop = 0;
-$i = 0;
+$procPath = "F:\PS2Processing"; #folder on a drive that has space for you to process the files. SSDs are usually faster if you have one. Should be the folder this script is in!
+$destPath = "F:\Launchbox\Games\Sony Playstation 2"; #final destination - Launchbox's rom folder most likely
+$wtpPath = "F:\PS2WTP"; #waiting to process folder - where you usually download your roms
+$dlPath = "";
+$targ = 5; #number of files you'd like to process at a time, set this to -1 if you're OK copying every file over at once. - NOT ENCOURAGED TO DO THIS
+$uz = 0; #value to report how many files the system has unpacked so far
+$rp = 0; #value to report how many files the system has recompressed so far
+$loop = 0; #value to track how many loops the system has done. Also used to time when to check the download folder. 
+$i = 5;
 $forever = 1; #change this to zero if you only want to do 30 files at a time with breaks in between. If set to 1 program will lopp until it runs out of zips.
+$checkdlFolder = 0; #flag for system to check a designated download folder
+$zipstoMove = 0; #value set by system for monitoring if there are 10 or more zips to move from your download folder
 
 #Loop to run forever / move 30 zips into processing folder at a time only - to change the number you move adjust $targ above.
+
+while ($checkdlFolder = 1){
+        Get-ChildItem "$dlfolder\*.zip" | ForEach-Object {
+        $zipstoMove++
+}
+    if($zipstoMove -gt 10){
+        RoboCopy $dlPath $wtpPath /mov
+        $checkdlFolder = 0;
+        $forever = 1;
+    }
+}
+
 while ($forever = 1)
 {
-        Get-ChildItem "$wtpPath\*.zip" | ForEach-Object {
+        Get-ChildItem "$wtpPath\*.zip","$wtpPath\*.gz" | ForEach-Object {
         if( $i -ne $targ ){
         Move-Item $_ $procPath
         $i++;
@@ -29,24 +44,33 @@ while ($forever = 1)
 
 
 #Extract Copied Zips
-    Get-ChildItem "$procPath\*.zip" | ForEach-Object { 
+    Get-ChildItem "$procPath\*.zip","$procPath\*.gz" | ForEach-Object { 
         & Expand-7Zip $_.Name .\;
         $uz++ 
         Write-Host "$uz files unpacked"};
 
+#Convert Bins to ISO
+    Get-ChildItem "$procPath\*.bin" | ForEach-Object{
+        Write-Host "We're converting $_.Name to an ISO and deleting the Bin/Cue files!"
+        & piso convert $_.Name -o ($_.BaseName+".iso");
+        Remove-Item ($_.BaseName+".bin"), ($_.BaseName+".Cue") -Force
+    }
+
     
 #Repack With Superior Compression and Clean Up Folder / Move 
-    Get-ChildItem  "$procPath\*.iso","$procPath\*.bin" | ForEach-Object { 
-        & Compress-7Zip ($_.BaseName+".gz") $_.Name; 
+    Get-ChildItem  "$procPath\*.iso" | ForEach-Object { 
+        & .\maxcso.exe --threads=10 --fast ($_.Name) -o ($_.BaseName+".cso"); 
         $rp++
         Write-Host "We've repacked $rp files."};
         Write-Host "We're cleaning up the folder so we can do it again!"
-        Remove-Item *.iso, *.bin, *.cue, *.zip -Force;
-        Move-Item *.gz "$destPath";
+        Remove-Item *.iso, *.zip, *.gz -Force;
+        Move-Item *.cso "$destPath";
         $loop++
         $i = 0
         Write-Host "We've looped $loop times!"
+
+    if($loop -eq 10){
+        $checkdlFolder = 1
+        $forever = 0
+    }
 }
-
-
-
