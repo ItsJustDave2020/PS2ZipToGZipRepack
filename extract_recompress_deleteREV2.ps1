@@ -18,6 +18,7 @@ $i = 5;
 $forever = 1; #change this to zero if you only want to do 30 files at a time with breaks in between. If set to 1 program will lopp until it runs out of zips.
 $checkdlFolder = 0; #flag for system to check a designated download folder
 $zipstoMove = 0; #value set by system for monitoring if there are 10 or more zips to move from your download folder
+$loopstoCheckin = 10; #value to modify how often we check in the download folder for more files
 
 #Loop to run forever / move 30 zips into processing folder at a time only - to change the number you move adjust $targ above.
 
@@ -69,8 +70,12 @@ while ($forever = 1)
         $i = 0
         Write-Host "We've looped $loop times!"
 
-    if($loop -eq 10){
-        $checkdlFolder = 1
-        $forever = 0
+    if($loop -eq $loopstoCheckin){
+        $checkdlFolder = 1;
+        $forever = 0;
+        $loopstoCheckin + 10;
     }
 }
+
+
+
