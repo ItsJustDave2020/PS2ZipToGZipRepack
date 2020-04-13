@@ -1,5 +1,5 @@
 # PS2ZipToGZipRepack
-Powershell Script To Repack PS2 ZIP archives into GZIP for better storage / native PCSX2 support.
+Powershell Script To Convert downloaded PS2 zips into ISOs then into CSOs and move them to your Launchbox Games directory.
 
 REQUIREMENTS:
 
