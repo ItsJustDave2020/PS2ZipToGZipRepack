@@ -7,9 +7,9 @@ Powershell 7 : https://docs.microsoft.com/en-us/powershell/scripting/install/ins
 
 7zip4Powershell - after you install Powershell 7 you can run this command: Install-Module -Name 7Zip4Powershell -RequiredVersion 1.9.0 
 
-maxcso - https://github.com/unknownbrackets/maxcso/releases
+maxcso - https://github.com/unknownbrackets/maxcso/releases (should be placed in same directory as script) 
 
-powerISO - https://www.poweriso.com/ (pro required for .bin to .iso conversion)
+powerISO - https://www.poweriso.com/ (pro required for .bin to .iso conversion) (you must add piso.exe to your Environmental Variable PATH for it to work properly)
 
 You can either download the file from the repository, or simply copy and paste it into any text editor and save it as a .ps1 file. 
 I'd recommend placing this ps1 file in the PROCESSING DIRECTORY (where you're moving the zips to, for the script to work on them) -
