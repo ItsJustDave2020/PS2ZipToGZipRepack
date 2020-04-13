@@ -4,6 +4,7 @@
 #Requirements - 
 # Powershell 7 : https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-windows?view=powershell-7
 # 7zip4Powershell - after you install powershell 7 you can run this command: Install-Module -Name 7Zip4Powershell -RequiredVersion 1.9.0 
+# Power ISO Pro - power ISO pro is required (and needs to be added to PATH) for the ISO conversion portion
 
 
 $procPath = "F:\PS2Processing"; #folder on a drive that has space for you to process the files. SSDs are usually faster if you have one. Should be the folder this script is in!
